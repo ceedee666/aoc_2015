@@ -9,7 +9,7 @@ def parse_input(lines: list[str]) -> tuple[str, list[tuple[str, str]]]:
     return lines[-1], replacements
 
 
-def solve(lines: list[str]) -> int:
+def solve_part_1(lines: list[str]) -> int:
     molecules = set()
     molecule, replacements = parse_input(lines)
     for _str, replacement in replacements:
@@ -20,5 +20,29 @@ def solve(lines: list[str]) -> int:
     return len(molecules)
 
 
+def solve_part_2(lines: list[str]) -> int:
+    molecule, replacements = parse_input(lines)
+
+    reductions = {y: x for x, y in replacements}
+    sorted_keys = sorted(reductions.keys(), key=lambda x: len(x), reverse=True)
+
+    steps = 0
+    while molecule != "e":
+        for key in sorted_keys:
+            if key in molecule:
+                molecule = molecule.replace(key, reductions[key], 1)
+                steps += 1
+                break
+
+    return steps
+
+
 if __name__ == "__main__":
-    print(solve(read_input_file("input.txt")), "different modules can be genearted.")
+    print(
+        solve_part_1(read_input_file("input.txt")),
+        "different modules can be genearted.",
+    )
+    print(
+        solve_part_2(read_input_file("input.txt")),
+        "steps are needed to generate the molecule form e.",
+    )
